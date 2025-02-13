@@ -11,7 +11,7 @@ export class UsersController {
 
   @Get()
   getUsers() {
-    this.users.push({ id: this.users.length, name: 'Dave', email: 'dave@example.com' });
+    
     return this.users;
   }
 
@@ -29,8 +29,13 @@ export class UsersController {
 
   @Post()
   createUser(@Req() req: Request) {
-    console.log(req.body);
-    return req.body;
+    try {
+      const { name, email } = req.body;
+      this.users.push({ id: this.users.length + 1, name, email });
+      return { id: this.users.length, name, email };
+    } catch (error) {
+      throw error;
+    }
   }
   
 
