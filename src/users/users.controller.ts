@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { UsersService } from './users.service';
 
@@ -32,6 +32,19 @@ export class UsersController {
       throw error;
     }
   }
+
+  @Delete(':id')
+  deleteUser(@Param('id') id: string) {
+    console.log(id);
+    
+    try {
+      this.usersService.deleteUser(+id);
+      return { message: 'User deleted successfully' };
+    } catch (error) {
+      return { message: 'Error deleting user' };
+    }
+  }
+
   
 
 }
