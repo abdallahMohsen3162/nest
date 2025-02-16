@@ -1,18 +1,14 @@
 import { Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  private readonly users = [
-    { id: 1, name: 'Alice', email: 'alice@example.com' },
-    { id: 2, name: 'Bob', email: 'bob@example.com' },
-    { id: 3, name: 'Charlie', email: 'charlie@example.com' },
-  ];
+  constructor(private readonly usersService :UsersService){}
 
   @Get()
   getUsers() {
-    
-    return this.users;
+    return this.usersService.getUsers();
   }
 
   @Get(":id")
@@ -20,19 +16,18 @@ export class UsersController {
     try {
       console.log(id, typeof id);
       
-      return this.users.find((user) => user.id == +id);
+      return this.usersService.getSingleUser(+id);
     } catch (error) {
       return {};
     }
-    // return this.users.find((user) => user.id === userId);
   }
 
   @Post()
   createUser(@Req() req: Request) {
     try {
       const { name, email } = req.body;
-      this.users.push({ id: this.users.length + 1, name, email });
-      return { id: this.users.length, name, email };
+      this.usersService.createUser({ id: this.usersService.getUsers().length + 1, name, email });
+      return { id: this.usersService.getUsers().length, name, email };
     } catch (error) {
       throw error;
     }
