@@ -27,5 +27,11 @@ export class UsersService {
       this.users.splice(index, 1);
     }
   }
+  updateUser(id: number, user: any) {
+    const index = this.users.findIndex((user) => user.id === id);
+    if (index !== -1) {
+      this.users[index] = user;
+    }
+  }
 
 }
