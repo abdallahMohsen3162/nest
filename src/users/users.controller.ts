@@ -1,6 +1,7 @@
-import { Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Request } from 'express';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user-dto';
 
 @Controller('users')
 export class UsersController {
@@ -23,11 +24,13 @@ export class UsersController {
   }
 
   @Post()
-  createUser(@Req() req: Request) {
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+
+  createUser(@Body() createUserDto: CreateUserDto) {
     try {
-      const { name, email } = req.body;
-      this.usersService.createUser({ id: this.usersService.getUsers().length + 1, name, email });
-      return { id: this.usersService.getUsers().length, name, email };
+
+      this.usersService.createUser(createUserDto);
+      return { user:createUserDto };
     } catch (error) {
       throw error;
     }
@@ -54,6 +57,17 @@ export class UsersController {
     } catch (error) {
       return { message: 'Error updating user' };
     }
+  }
+
+
+  @Post('test')
+  test(@Req() req: Request) {
+    console.log(req.body);
+    
+    return {
+      message: 'POST request received',
+      data: req.body,
+    };
   }
 
   

@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user-dto';
+import { User } from './entities/user';
+
 
 @Injectable()
 export class UsersService {
-  private readonly users = [
-    { id: 1, name: 'Alice', email: 'alice@example.com' },
-    { id: 2, name: 'Bob', email: 'bob@example.com' },
-    { id: 3, name: 'Charlie', email: 'charlie@example.com' },
-  ];
+  private readonly users : User[] = [];
 
   getUsers() {
     return this.users;
@@ -16,8 +15,8 @@ export class UsersService {
     return this.users.find((user) => user.id === id);
   }
 
-  createUser(user: any) {
-    this.users.push(user);
+  createUser(user: CreateUserDto) {
+    this.users.push({...user, id: this.users.length + 1});
     return user;
   }
 
